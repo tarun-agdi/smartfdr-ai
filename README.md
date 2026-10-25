@@ -31,3 +31,35 @@ AICTE manages security deposits and Fixed Deposit Receipts (FDRs) for technical 
    ```bash
    git clone https://github.com/YOUR_USERNAME/smartfdr-ai.git
    cd smartfdr-ai
+
+## 🚀 How to Run Locally
+
+1. **Clone the repository:**
+   ```bash
+   git clone https://github.com
+   cd smartfdr-ai
+   ```
+
+2. **Install dependencies:**
+   ```bash
+   npm install
+   ```
+
+3. **Start the development server:**
+   ```bash
+   npm run dev
+   ```
+
+4. **Open in browser:**
+   Navigate to `http://localhost:3000` (or the port specified in your terminal).
+
+## 📱 Demo Flow (The 90-Second Walkthrough)
+1. **Dashboard:** View live metrics and pending actions.
+2. **Register New FDR:** Drag and drop a sample FDR document. Run the simulated OCR to see it automatically flag a ₹12,00,000 vs ₹10,00,000 discrepancy.
+3. **Document Verification:** Inspect the side-by-side extracted fields and the uploaded document.
+4. **Resolve Finding:** Switch to the Reviewer role, enter a justification, and resolve the discrepancy.
+5. **Notifications:** Switch back to the Institution role and check the bell icon to see the real-time resolution alert.
+6. **Audit Log:** View the system-wide immutable record of the resolved action.
+
+---
+> ⚠️ **Disclaimer:** *This is a prototype built for demonstration purposes. No live AICTE or bank connections are active. All data is simulated.*
