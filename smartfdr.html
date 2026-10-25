@@ -1,0 +1,1532 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>SmartFDR AI</title>
+  <style>
+    body,
+    body * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: Arial, "Segoe UI", Roboto, Helvetica, sans-serif;
+      font-size: 14px;
+      line-height: 1.4;
+      color: #111827;
+      background: #f5f7fa;
+    }
+
+    body h1,
+    body h2,
+    body h3,
+    body p,
+    body ul,
+    body ol {
+      margin: 0;
+      padding: 0;
+    }
+
+    body ul,
+    body ol {
+      list-style: none;
+    }
+
+    body a {
+      color: #1d4ed8;
+      text-decoration: underline;
+    }
+
+    body button {
+      font-family: inherit;
+      font-size: 13px;
+      cursor: pointer;
+      border-radius: 2px;
+    }
+
+    body button:disabled {
+      cursor: not-allowed;
+    }
+
+    body input,
+    body select,
+    body textarea {
+      font-family: inherit;
+      font-size: 14px;
+      border: 1px solid #d1d5db;
+      border-radius: 2px;
+      padding: 6px 10px;
+      background: #fff;
+      color: #111827;
+    }
+
+    body :focus-visible {
+      outline: 2px solid #2563eb;
+      outline-offset: 1px;
+    }
+
+    body table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 13px;
+    }
+
+    body th {
+      text-align: left;
+      background: #f3f4f6;
+      font-size: 12px;
+      text-transform: uppercase;
+      font-weight: 600;
+      color: #4b5563;
+      letter-spacing: 0.03em;
+      padding: 10px 12px;
+      border-bottom: 1px solid #e5e7eb;
+    }
+
+    body td {
+      padding: 10px 12px;
+      border-bottom: 1px solid #e5e7eb;
+      height: 44px;
+      vertical-align: middle;
+    }
+
+    .sr-only:not(:focus) {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      padding: 0;
+      margin: -1px;
+      overflow: hidden;
+      clip: rect(0, 0, 0, 0);
+      white-space: nowrap;
+      border: 0;
+    }
+
+    .opacity-50 {
+      opacity: .5;
+    }
+
+    .cursor-not-allowed {
+      cursor: not-allowed;
+    }
+
+    .banner {
+      height: 28px;
+      background: #fffbeb;
+      border-bottom: 1px solid #fcd34d;
+      color: #92400e;
+      font-size: 12px;
+      text-align: center;
+      line-height: 27px;
+      position: sticky;
+      top: 0;
+      z-index: 50;
+    }
+
+    .t1 {
+      height: 28px;
+      background: #0f2743;
+      color: #e5e7eb;
+      font-size: 11px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0 24px;
+    }
+
+    .t1 span.fs {
+      margin: 0 4px;
+    }
+
+    .t2 {
+      height: 60px;
+      background: #fff;
+      border-bottom: 1px solid #d1d5db;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0 24px;
+      position: relative;
+    }
+
+    .emblem {
+      width: 36px;
+      height: 36px;
+      border: 1px solid #d1d5db;
+      font-size: 12px;
+      color: #6b7280;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-right: 12px;
+    }
+
+    .t2r {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      position: relative;
+    }
+
+    .iconbtn {
+      background: none;
+      border: 1px solid transparent;
+      position: relative;
+      width: 32px;
+      height: 32px;
+      padding: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .reddot {
+      position: absolute;
+      top: 3px;
+      right: 3px;
+      width: 8px;
+      height: 8px;
+      background: #b91c1c;
+    }
+
+    .userbtn {
+      background: none;
+      border: 1px solid transparent;
+      text-align: left;
+      padding: 2px 6px;
+    }
+
+    .t3 {
+      height: 40px;
+      background: #fff;
+      border-bottom: 2px solid #1e3a5f;
+      display: flex;
+      padding: 0 24px;
+    }
+
+    .navb {
+      background: none;
+      border: 0;
+      border-bottom: 2px solid transparent;
+      border-radius: 0;
+      padding: 0 14px;
+      font-size: 13px;
+      font-weight: 500;
+      color: #374151;
+      height: 100%;
+    }
+
+    .navb:hover {
+      background: #f3f4f6;
+    }
+
+    .navb.active {
+      color: #1e3a5f;
+      font-weight: 600;
+      border-bottom: 2px solid #1e3a5f;
+    }
+
+    .dd {
+      position: absolute;
+      background: #fff;
+      border: 1px solid #d1d5db;
+      border-radius: 2px;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, .08);
+      z-index: 60;
+      display: none;
+    }
+
+    .dd.open {
+      display: block;
+    }
+
+    .main {
+      background: #f5f7fa;
+      padding: 20px 24px;
+      min-height: calc(100vh - 128px);
+    }
+
+    .wrap {
+      max-width: 1440px;
+      margin: 0 auto;
+    }
+
+    .crumb {
+      font-size: 12px;
+      color: #6b7280;
+      margin-bottom: 8px;
+    }
+
+    .crumb .cur {
+      color: #111827;
+    }
+
+    .titlerow {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 16px;
+      gap: 12px;
+    }
+
+    body h1 {
+      font-size: 20px;
+      font-weight: 600;
+      color: #1e3a5f;
+    }
+
+    .sub {
+      font-size: 12px;
+      color: #6b7280;
+      margin-top: 2px;
+    }
+
+    body h2 {
+      font-size: 16px;
+      font-weight: 600;
+      color: #1e3a5f;
+      margin-bottom: 10px;
+    }
+
+    .panel {
+      background: #fff;
+      border: 1px solid #d1d5db;
+      border-radius: 2px;
+      padding: 16px;
+    }
+
+    .panel.np {
+      padding: 0;
+    }
+
+    .gap {
+      margin-bottom: 12px;
+    }
+
+    .row2 {
+      display: grid;
+      gap: 12px;
+      margin-bottom: 12px;
+    }
+
+    .btn {
+      padding: 6px 12px;
+      border: 1px solid #1e3a5f;
+      background: #1e3a5f;
+      color: #fff;
+      font-weight: 600;
+    }
+
+    .btn:hover:not(:disabled) {
+      background: #2c4d75;
+      border-color: #2c4d75;
+    }
+
+    .btn.sec {
+      background: #fff;
+      color: #1e3a5f;
+      border-color: #9ca3af;
+    }
+
+    .btn.sec:hover:not(:disabled) {
+      background: #f3f4f6;
+    }
+
+    .linkbtn {
+      background: none;
+      border: 0;
+      padding: 0;
+      color: #1d4ed8;
+      text-decoration: underline;
+      font-size: inherit;
+    }
+
+    .badge {
+      display: inline-block;
+      border-radius: 2px;
+      font-size: 12px;
+      padding: 2px 8px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: .02em;
+      border: 1px solid;
+      white-space: nowrap;
+    }
+
+    .b-green {
+      background: #f0fdf4;
+      color: #15803d;
+      border-color: #86efac;
+    }
+
+    .b-red {
+      background: #fef2f2;
+      color: #b91c1c;
+      border-color: #fca5a5;
+    }
+
+    .b-amber {
+      background: #fffbeb;
+      color: #b45309;
+      border-color: #fcd34d;
+    }
+
+    .b-grey {
+      background: #f3f4f6;
+      color: #4b5563;
+      border-color: #d1d5db;
+      font-size: 11px;
+    }
+
+    .tiles {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 12px;
+      margin-bottom: 12px;
+    }
+
+    .tiles.three {
+      grid-template-columns: repeat(3, 1fr);
+    }
+
+    .tile {
+      background: #fff;
+      border: 1px solid #d1d5db;
+      border-radius: 2px;
+      padding: 12px 16px;
+    }
+
+    .tl {
+      font-size: 12px;
+      color: #6b7280;
+      text-transform: uppercase;
+      letter-spacing: .03em;
+    }
+
+    .tn {
+      font-size: 26px;
+      font-weight: 700;
+      color: #1e3a5f;
+    }
+
+    .tc {
+      font-size: 11px;
+      color: #6b7280;
+    }
+
+    .small {
+      font-size: 12px;
+      color: #6b7280;
+    }
+
+    .kv {
+      font-size: 13px;
+      margin-bottom: 8px;
+    }
+
+    .kv .k {
+      display: block;
+      font-size: 12px;
+      color: #6b7280;
+    }
+
+    .bar-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 8px;
+      font-size: 13px;
+    }
+
+    .bar-row .lab {
+      width: 100px;
+      flex: none;
+      font-size: 12px;
+    }
+
+    .bar-row .track {
+      flex: 1;
+    }
+
+    .bar {
+      height: 20px;
+    }
+
+    .dot {
+      display: inline-block;
+      width: 6px;
+      height: 6px;
+      background: #9ca3af;
+      margin-right: 8px;
+      vertical-align: middle;
+    }
+
+    .lbl {
+      display: block;
+      font-size: 12px;
+      font-weight: 600;
+      color: #6b7280;
+      text-transform: uppercase;
+      margin-bottom: 4px;
+    }
+
+    .grid2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+
+    .grid2 input,
+    .grid2 select,
+    .grid2 textarea {
+      width: 100%;
+      height: 34px;
+    }
+
+    .grid2 textarea {
+      height: auto;
+    }
+
+    .filter {
+      display: flex;
+      gap: 12px;
+      align-items: flex-end;
+      flex-wrap: wrap;
+      padding: 12px 16px;
+    }
+
+    .filter input,
+    .filter select {
+      height: 32px;
+      padding: 4px 8px;
+      font-size: 13px;
+    }
+
+    .finding {
+      border: 1px solid #d1d5db;
+      border-left: 4px solid;
+      border-radius: 2px;
+      padding: 10px 12px;
+      margin-bottom: 8px;
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      align-items: flex-start;
+    }
+
+    .f-red {
+      border-left-color: #b91c1c;
+    }
+
+    .f-amber {
+      border-left-color: #b45309;
+    }
+
+    .f-green {
+      border-left-color: #15803d;
+      background: #f0fdf4;
+    }
+
+    .doc {
+      position: relative;
+      height: 520px;
+      background: #fafafa;
+      border: 1px solid #d1d5db;
+      padding: 24px;
+      font-family: "Courier New", monospace;
+      font-size: 12px;
+      color: #6b7280;
+      white-space: pre-wrap;
+      overflow: hidden;
+    }
+
+    .wm {
+      position: absolute;
+      top: 42%;
+      left: 6%;
+      font-size: 48px;
+      color: #e5e7eb;
+      transform: rotate(-30deg);
+      pointer-events: none;
+      white-space: nowrap;
+      font-weight: 700;
+    }
+
+    .tevent {
+      display: flex;
+      gap: 12px;
+    }
+
+    .tevent .ts {
+      width: 120px;
+      flex: none;
+      font-size: 12px;
+      color: #6b7280;
+      padding-top: 1px;
+    }
+
+    .tevent .rail {
+      width: 10px;
+      flex: none;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .tevent .pt {
+      width: 8px;
+      height: 8px;
+      background: #6b7280;
+      margin-top: 4px;
+    }
+
+    .tevent .pt.last {
+      background: #b45309;
+    }
+
+    .tevent .ln {
+      width: 2px;
+      flex: 1;
+      background: #d1d5db;
+    }
+
+    .tevent .bd {
+      padding-bottom: 14px;
+      font-size: 13px;
+    }
+
+    .tabs {
+      display: flex;
+      border-bottom: 1px solid #d1d5db;
+      margin-bottom: 12px;
+    }
+
+    .tabb {
+      background: none;
+      border: 0;
+      border-bottom: 2px solid transparent;
+      border-radius: 0;
+      padding: 8px 16px;
+      font-size: 13px;
+      color: #374151;
+    }
+
+    .tabb.active {
+      color: #1e3a5f;
+      font-weight: 600;
+      border-bottom-color: #1e3a5f;
+    }
+
+    .modalbg {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, .35);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 100;
+    }
+
+    .modalbg.open {
+      display: flex;
+    }
+
+    .modal {
+      width: 480px;
+      max-width: 92vw;
+      background: #fff;
+      border: 1px solid #d1d5db;
+      border-radius: 2px;
+      padding: 20px;
+    }
+
+    .flash {
+      background: #f0fdf4;
+      border: 1px solid #86efac;
+      border-left: 4px solid #15803d;
+      color: #15803d;
+      font-size: 13px;
+      font-weight: 600;
+      padding: 8px 12px;
+      margin-bottom: 12px;
+      display: none;
+    }
+
+    .flash.show {
+      display: block;
+    }
+
+    .footer {
+      background: #fff;
+      border-top: 1px solid #d1d5db;
+      padding: 12px 24px;
+      font-size: 12px;
+      color: #6b7280;
+    }
+
+    .footer .l {
+      display: flex;
+      justify-content: space-between;
+    }
+
+    .notif {
+      padding: 10px 12px;
+      border-bottom: 1px solid #e5e7eb;
+      border-left: 2px solid transparent;
+    }
+
+    .notif.unread {
+      border-left-color: #b91c1c;
+    }
+
+    .actbtn {
+      display: block;
+      width: 100%;
+      margin-bottom: 8px;
+    }
+
+    .screen {
+      display: none;
+    }
+
+    .screen.on {
+      display: block;
+    }
+
+    @media (max-width:1000px) {
+      .tiles {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .row2 {
+        grid-template-columns: 1fr !important;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <a href="#main" class="sr-only focus:not-sr-only">Skip to main content</a>
+  <div class="banner">Demo Mode — Sample data only. No live AICTE or bank connection.</div>
+
+  <header>
+    <div class="t1">
+      <div>Government of India | All India Council for Technical Education</div>
+      <div><span class="fs">A−</span><span class="fs">A</span><span class="fs">A+</span> | &nbsp;English ▾</div>
+    </div>
+    <div class="t2">
+      <div style="display:flex;align-items:center">
+        <div class="emblem">Emblem</div>
+        <div>
+          <div style="font-size:18px;font-weight:700;color:#1e3a5f">SmartFDR AI</div>
+          <div style="font-size:12px;color:#6b7280">Intelligent Security Deposit &amp; FDR Lifecycle Management</div>
+        </div>
+      </div>
+      <div class="t2r">
+        <input type="text" id="gsearch" aria-label="Search by FDR reference, institution, or case ID"
+          placeholder="Search by FDR reference, institution, or case ID"
+          style="width:240px;height:32px;padding:4px 8px;font-size:13px">
+        <button class="iconbtn" id="bellbtn" aria-label="Notifications" aria-haspopup="true" aria-expanded="false">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#6b7280" stroke-width="2">
+            <path d="M18 8a6 6 0 0 0-12 0c0 7-3 9-3 9h18s-3-2-3-9" />
+            <path d="M13.7 21a2 2 0 0 1-3.4 0" />
+          </svg>
+          <span class="reddot"></span>
+        </button>
+        <button class="userbtn" id="userbtn" aria-haspopup="true" aria-expanded="false" aria-label="Switch role">
+          <div id="uname" style="font-size:13px;font-weight:600">K. Sharma</div>
+          <div style="font-size:11px;color:#6b7280"><span id="urole">Institution User</span> ▾</div>
+        </button>
+        <div class="dd" id="notifdd" style="width:380px;top:48px;right:150px">
+          <div style="display:flex;justify-content:space-between;padding:10px 12px;border-bottom:1px solid #e5e7eb">
+            <span style="font-size:13px;font-weight:600">Notifications</span>
+            <button class="linkbtn" id="markread" style="font-size:12px">Mark all as read</button>
+          </div>
+          <div class="notif unread">
+            <div class="small">25 Oct, 10:04</div>
+            <div style="font-size:13px;font-weight:600">Document mismatch detected</div>
+            <div class="small">AICTE/FDR/2024/0789 — reviewer attention required.</div>
+          </div>
+          <div class="notif unread">
+            <div class="small">25 Oct, 09:02</div>
+            <div style="font-size:13px;font-weight:600">Case overdue</div>
+            <div class="small">AICTE/FDR/2024/0789 — 2 days pending beyond configured target.</div>
+          </div>
+          <div class="notif">
+            <div class="small"><span class="dot"></span>24 Oct, 16:41</div>
+            <div style="font-size:13px;font-weight:600">FDR maturity approaching</div>
+            <div class="small">AICTE/FDR/2023/1122 matures in 46 days. Review the instrument and determine next action.
+            </div>
+          </div>
+          <div class="notif" style="border-bottom:0">
+            <div class="small">24 Oct, 09:22</div>
+            <div style="font-size:13px;font-weight:600">Case assigned</div>
+            <div class="small">AICTE/FDR/2024/0456 assigned to R. Mehta, Deputy Director.</div>
+          </div>
+        </div>
+        <div class="dd" id="roledd" style="width:220px;top:48px;right:0">
+          <button class="linkbtn"
+            style="display:block;width:100%;text-align:left;padding:8px 12px;text-decoration:none;color:#111827"
+            data-role="institution">Institution User (K. Sharma)</button>
+          <button class="linkbtn"
+            style="display:block;width:100%;text-align:left;padding:8px 12px;text-decoration:none;color:#111827"
+            data-role="reviewer">Reviewer (S. Iyer)</button>
+          <button class="linkbtn"
+            style="display:block;width:100%;text-align:left;padding:8px 12px;text-decoration:none;color:#111827"
+            data-role="administrator">Administrator (A. Verma)</button>
+        </div>
+      </div>
+    </div>
+    <nav class="t3" aria-label="Main navigation">
+      <button class="navb active" data-nav="dashboard">Overview Dashboard</button>
+      <button class="navb" data-nav="registry">FDR Registry</button>
+      <button class="navb" data-nav="register">Register New FDR</button>
+      <button class="navb" data-nav="docintel">Document Verification</button>
+      <button class="navb" data-nav="queue">Reviewer Queue</button>
+      <button class="navb" data-nav="reports">Reports &amp; Audit</button>
+    </nav>
+  </header>
+
+  <main id="main" class="main">
+    <div class="wrap">
+      <div id="flash" class="flash" role="status"></div>
+
+      <!-- SCREEN 1 -->
+      <section id="s-dashboard" class="screen on">
+        <div class="crumb">Home &gt; <span class="cur">Overview Dashboard</span></div>
+        <div class="titlerow">
+          <div>
+            <h1>FDR Management Overview</h1>
+            <div class="sub">Monitor deposits, verification progress, maturity dates, and pending actions from one
+              place.</div>
+          </div>
+          <button class="btn" onclick="showScreen('register')">+ Register New FDR</button>
+        </div>
+        <div class="tiles">
+          <div class="tile">
+            <div class="tl">Total FDR Records</div>
+            <div class="tn">3</div>
+            <div class="tc">Across 3 institutions</div>
+          </div>
+          <div class="tile">
+            <div class="tl">Pending Verification</div>
+            <div class="tn">1</div>
+            <div class="tc">Awaiting reviewer action</div>
+          </div>
+          <div class="tile">
+            <div class="tl">Discrepancies</div>
+            <div class="tn" id="m-disc">1</div>
+            <div class="tc">Amount mismatch flagged</div>
+          </div>
+          <div class="tile">
+            <div class="tl">Approaching Maturity</div>
+            <div class="tn">1</div>
+            <div class="tc">Within 60-day window</div>
+          </div>
+        </div>
+        <div class="row2" style="grid-template-columns:3fr 2fr">
+          <div class="panel np" style="padding:16px 0 0">
+            <h2 style="padding:0 16px">Upcoming Maturities</h2>
+            <table>
+              <thead>
+                <tr>
+                  <th scope="col">FDR ID</th>
+                  <th scope="col">Institution</th>
+                  <th scope="col">Amount</th>
+                  <th scope="col">Maturity</th>
+                  <th scope="col">Status</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>AICTE/FDR/2023/1122</td>
+                  <td>Government Engineering College, Thrissur</td>
+                  <td>₹40,00,000</td>
+                  <td>10 Dec 2026</td>
+                  <td><span class="badge b-amber">INCOMPLETE</span></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="panel">
+            <h2>Pending Actions</h2>
+            <ul>
+              <li style="padding-bottom:10px;border-bottom:1px solid #e5e7eb;margin-bottom:10px">
+                <div style="font-size:13px;font-weight:600">AICTE/FDR/2024/0789 — Amount mismatch</div>
+                <div class="small">Owner: S. Iyer, Assistant Director<br>Next action: Resolve validation finding · 2
+                  days pending</div>
+              </li>
+              <li>
+                <div style="font-size:13px;font-weight:600">AICTE/FDR/2023/1122 — Missing affidavit</div>
+                <div class="small">Owner: Unassigned<br>Next action: Assign reviewer</div>
+              </li>
+            </ul>
+          </div>
+        </div>
+        <div class="row2" style="grid-template-columns:1fr 1fr">
+          <div class="panel">
+            <h2>Case Status Distribution</h2>
+            <div class="bar-row">
+              <div class="lab">PASS</div>
+              <div class="track">
+                <div class="bar" style="width:33%;background:#15803d;opacity:.8"></div>
+              </div>
+              <div>1 case</div>
+            </div>
+            <div class="bar-row">
+              <div class="lab">REVIEW REQUIRED</div>
+              <div class="track">
+                <div class="bar" style="width:33%;background:#b91c1c;opacity:.8"></div>
+              </div>
+              <div>1 case</div>
+            </div>
+            <div class="bar-row">
+              <div class="lab">INCOMPLETE</div>
+              <div class="track">
+                <div class="bar" style="width:33%;background:#b45309;opacity:.8"></div>
+              </div>
+              <div>1 case</div>
+            </div>
+          </div>
+          <div class="panel">
+            <h2>Recent Activity</h2>
+            <ul style="font-size:13px">
+              <li style="margin-bottom:6px"><span class="dot"></span><span class="small">25 Oct, 10:04 —
+                </span>Validation finding created for AICTE/FDR/2024/0789</li>
+              <li style="margin-bottom:6px"><span class="dot"></span><span class="small">25 Oct, 10:03 — </span>OCR
+                extraction completed for AICTE/FDR/2024/0789</li>
+              <li style="margin-bottom:6px"><span class="dot"></span><span class="small">24 Oct, 16:41 — </span>Reminder
+                generated for AICTE/FDR/2023/1122 (maturity approaching)</li>
+              <li style="margin-bottom:6px"><span class="dot"></span><span class="small">24 Oct, 11:20 — </span>Case
+                assigned to S. Iyer, Assistant Director</li>
+              <li><span class="dot"></span><span class="small">24 Oct, 11:18 — </span>FDR record created for
+                AICTE/FDR/2024/0789</li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <!-- SCREEN 2 -->
+      <section id="s-registry" class="screen">
+        <div class="crumb">Home &gt; <span class="cur">FDR Registry</span></div>
+        <div class="titlerow">
+          <div>
+            <h1>FDR Registry</h1>
+            <div class="sub">All registered Fixed Deposit Receipts across institutions.</div>
+          </div>
+          <button class="btn sec">Export (demo)</button>
+        </div>
+        <div class="panel np gap filter">
+          <div><label class="lbl" for="f-q">Search</label><input type="text" id="f-q"
+              placeholder="Search FDR ID, reference, or institution" style="width:280px"></div>
+          <div><label class="lbl" for="f-inst">Institution</label><select id="f-inst">
+              <option value="">All</option>
+              <option value="A">National Institute of Engineering, Bengaluru</option>
+              <option value="B">Sri Venkateswara College of Engineering, Tirupati</option>
+              <option value="C">Government Engineering College, Thrissur</option>
+            </select></div>
+          <div><label class="lbl" for="f-status">Status</label><select id="f-status">
+              <option value="">All</option>
+              <option>PASS</option>
+              <option>REVIEW REQUIRED</option>
+              <option>INCOMPLETE</option>
+            </select></div>
+          <div><label class="lbl" for="f-mat">Maturity</label><select id="f-mat">
+              <option>Any</option>
+              <option>Next 30 days</option>
+              <option>Next 60 days</option>
+              <option>Next 90 days</option>
+            </select></div>
+          <button class="btn" id="f-apply" style="height:32px">Apply</button>
+          <button class="linkbtn" id="f-reset" style="height:32px">Reset</button>
+        </div>
+        <div class="panel np">
+          <table>
+            <thead>
+              <tr>
+                <th scope="col">FDR ID</th>
+                <th scope="col">Institution</th>
+                <th scope="col">Amount</th>
+                <th scope="col">Maturity</th>
+                <th scope="col">Status</th>
+                <th scope="col">Reviewer</th>
+                <th scope="col">Last Updated</th>
+                <th scope="col">Action</th>
+              </tr>
+            </thead>
+            <tbody id="reg-body"></tbody>
+          </table>
+        </div>
+        <div class="small" style="margin-top:8px" id="reg-count">Showing 1–3 of 3 records</div>
+      </section>
+
+      <!-- SCREEN 3 -->
+      <section id="s-register" class="screen">
+        <div class="crumb">Home &gt; <span class="cur">Register New FDR</span></div>
+        <div class="titlerow">
+          <div>
+            <h1>Register New FDR</h1>
+            <div class="sub">Enter the deposit details and upload the supporting documents.</div>
+          </div>
+        </div>
+        <div class="panel gap">
+          <h2>Institution Information</h2>
+          <div class="grid2">
+            <div><label class="lbl" for="r1">Institution Name *</label><input id="r1" type="text"
+                value="Sri Venkateswara College of Engineering, Tirupati"></div>
+            <div><label class="lbl" for="r2">Institution ID *</label><input id="r2" type="text" value="1-23456789">
+            </div>
+            <div><label class="lbl" for="r3">Institution Type *</label><select id="r3">
+                <option>Engineering</option>
+                <option>Pharmacy</option>
+                <option>Management</option>
+                <option>Other</option>
+              </select></div>
+            <div><label class="lbl" for="r4">Contact Person *</label><input id="r4" type="text" value="K. Sharma"></div>
+            <div><label class="lbl" for="r5">Official Email *</label><input id="r5" type="text"
+                value="accounts@svce.ac.in"></div>
+            <div><label class="lbl" for="r6">Contact Phone</label><input id="r6" type="text" value="+91 877 228 4400">
+            </div>
+          </div>
+        </div>
+        <div class="panel gap">
+          <h2>Deposit Information</h2>
+          <div class="grid2">
+            <div><label class="lbl" for="d1">FDR Reference Number *</label><input id="d1" type="text"
+                value="CNR/FD/2024/221045"></div>
+            <div><label class="lbl" for="d2">Bank Name *</label><input id="d2" type="text" value="Canara Bank"></div>
+            <div><label class="lbl" for="d3">Branch / Issuing Office</label><input id="d3" type="text"
+                value="Tirupati Main Branch"></div>
+            <div><label class="lbl" for="d4">Deposit Amount (INR) *</label><input id="d4" type="text" value="1000000">
+              <div class="small" id="amt-help">Enter amount in rupees. Do not include commas.<br>Submitted amount:
+                ₹10,00,000</div>
+            </div>
+            <div><label class="lbl" for="d5">Issue Date *</label><input id="d5" type="date" value="2024-06-20"></div>
+            <div><label class="lbl" for="d6">Maturity Date *</label><input id="d6" type="date" value="2027-06-20"></div>
+            <div><label class="lbl" for="d7">Related Approval Reference</label><input id="d7" type="text"
+                value="AICTE/AP/2024/1123"></div>
+            <div><label class="lbl" for="d8">Notes</label><textarea id="d8" rows="3"></textarea></div>
+          </div>
+        </div>
+        <div class="panel gap">
+          <h2>Document Upload</h2>
+          <table style="margin-bottom:12px">
+            <thead>
+              <tr>
+                <th scope="col">Document type</th>
+                <th scope="col">Status</th>
+                <th scope="col">File name</th>
+                <th scope="col">Action</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>FDR Copy *</td>
+                <td id="up-st" class="small">Not uploaded</td>
+                <td class="small" id="up-fn"></td>
+                <td><button class="linkbtn">Choose file</button></td>
+              </tr>
+              <tr>
+                <td>Application Letter *</td>
+                <td class="small">Not uploaded</td>
+                <td class="small"></td>
+                <td><button class="linkbtn">Choose file</button></td>
+              </tr>
+              <tr>
+                <td>Affidavit *</td>
+                <td class="small">Not uploaded</td>
+                <td class="small"></td>
+                <td><button class="linkbtn">Choose file</button></td>
+              </tr>
+            </tbody>
+          </table>
+          <div
+            style="border:1px dashed #9ca3af;border-radius:2px;padding:20px;text-align:center;font-size:13px;color:#6b7280;margin-bottom:8px">
+            Upload a PDF, PNG, or JPG. Maximum file size 5 MB.</div>
+          <button class="btn sec" id="ocr-btn">Upload Sample FDR</button>
+          <div id="ocr-out" style="display:none;margin-top:12px">
+            <div style="border:1px solid #d1d5db;padding:12px;background:#f9fafb;margin-bottom:8px">
+              <div style="display:flex;justify-content:space-between;margin-bottom:8px"><span
+                  style="font-size:13px;font-weight:600">OCR Extraction Result</span><span
+                  class="badge b-grey">Simulated</span></div>
+              <div style="font-size:12px;display:grid;grid-template-columns:140px 1fr;row-gap:4px">
+                <span style="color:#6b7280;text-transform:uppercase">FDR Reference</span><span>CNR/FD/2024/221045</span>
+                <span style="color:#6b7280;text-transform:uppercase">Bank Name</span><span>Canara Bank</span>
+                <span style="color:#6b7280;text-transform:uppercase">Deposit Amount</span><span>₹12,00,000</span>
+                <span style="color:#6b7280;text-transform:uppercase">Issue Date</span><span>20 Jun 2024</span>
+                <span style="color:#6b7280;text-transform:uppercase">Maturity Date</span><span>20 Jun 2027</span>
+              </div>
+            </div>
+            <div
+              style="background:#fef2f2;border:1px solid #fca5a5;border-left:4px solid #b91c1c;padding:10px 12px;border-radius:2px">
+              <div style="font-size:13px;font-weight:600;color:#b91c1c">⚠ Validation finding — Amount mismatch</div>
+              <div style="font-size:13px;color:#7f1d1d">OCR extracted ₹12,00,000 but the submitted amount is ₹10,00,000.
+                The case will require reviewer resolution before it can advance.</div>
+            </div>
+            <div style="text-align:right;margin-top:8px"><a href="#" onclick="showScreen('docintel');return false;">View
+                in Document Verification →</a></div>
+          </div>
+        </div>
+        <div style="display:flex;justify-content:flex-end;gap:12px;align-items:center">
+          <button class="linkbtn" onclick="showScreen('dashboard')">Cancel</button>
+          <button class="btn sec">Save Draft</button>
+          <button class="btn" id="submit-btn">Submit for Verification</button>
+        </div>
+      </section>
+
+      <!-- SCREEN 4 -->
+      <section id="s-docintel" class="screen">
+        <div class="crumb">Home &gt; <span class="cur">Document Verification</span></div>
+        <div class="titlerow">
+          <div>
+            <h1>Document Intelligence &amp; Verification</h1>
+            <div class="sub">Extracted values are compared against submitted data using deterministic rules. OCR output
+              does not prove document authenticity.</div>
+          </div>
+          <div><label class="sr-only" for="case-sel">Select case</label><select id="case-sel">
+              <option value="A">Case A — AICTE/FDR/2024/0456</option>
+              <option value="B" selected>Case B — AICTE/FDR/2024/0789 (current)</option>
+              <option value="C">Case C — AICTE/FDR/2023/1122</option>
+            </select></div>
+        </div>
+        <div id="di-cases"></div>
+        <div style="margin-top:12px;display:flex;justify-content:space-between;align-items:center">
+          <a href="#" onclick="openQueue();showScreen('queue');return false;">← Back to Reviewer Queue</a>
+          <a href="#" onclick="showScreen('casedetail');return false;">View Full Case →</a>
+        </div>
+        <div class="small" style="margin-top:8px">AI flags issues only. Final decision rests with the authorized
+          officer.</div>
+      </section>
+
+      <!-- SCREEN 5 -->
+      <section id="s-queue" class="screen">
+        <div id="q-a">
+          <div class="crumb">Home &gt; <span class="cur">Reviewer Queue</span></div>
+          <div class="titlerow">
+            <div>
+              <h1>Reviewer Queue</h1>
+              <div class="sub">Cases awaiting reviewer action, ordered by days pending.</div>
+            </div>
+          </div>
+          <div class="panel np">
+            <table>
+              <thead>
+                <tr>
+                  <th scope="col">Case ID</th>
+                  <th scope="col">FDR ID</th>
+                  <th scope="col">Institution</th>
+                  <th scope="col">Stage</th>
+                  <th scope="col">Owner</th>
+                  <th scope="col">Next Action</th>
+                  <th scope="col">Days Pending</th>
+                  <th scope="col">Action</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td style="border-left:4px solid #b91c1c">SFDR/2026/00123</td>
+                  <td>AICTE/FDR/2024/0789</td>
+                  <td>SVCE, Tirupati</td>
+                  <td>Document Review</td>
+                  <td>S. Iyer, Assistant Director</td>
+                  <td>Resolve validation finding</td>
+                  <td style="color:#b91c1c;font-weight:600">2 days</td>
+                  <td><a href="#" onclick="openCase('SFDR/2026/00123');return false;">Open Case →</a></td>
+                </tr>
+                <tr>
+                  <td>SFDR/2026/00101</td>
+                  <td>AICTE/FDR/2024/0456</td>
+                  <td>NIE, Bengaluru</td>
+                  <td>Decision Pending</td>
+                  <td>R. Mehta, Deputy Director</td>
+                  <td>Record decision</td>
+                  <td>1 day</td>
+                  <td><a href="#" onclick="openCase('SFDR/2026/00101');return false;">Open Case →</a></td>
+                </tr>
+                <tr>
+                  <td>SFDR/2026/00088</td>
+                  <td>AICTE/FDR/2023/1122</td>
+                  <td>GEC, Thrissur</td>
+                  <td>Correction Required</td>
+                  <td>Unassigned</td>
+                  <td>Assign reviewer</td>
+                  <td style="color:#b91c1c;font-weight:600">3 days</td>
+                  <td><a href="#" onclick="openCase('SFDR/2026/00088');return false;">Open Case →</a></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <div id="q-b" style="display:none"></div>
+      </section>
+
+      <!-- SCREEN 6 -->
+      <section id="s-reports" class="screen">
+        <div class="crumb">Home &gt; <span class="cur">Reports &amp; Audit</span></div>
+        <div class="titlerow">
+          <div>
+            <h1>Officer Dashboard</h1>
+            <div class="sub">Workflow performance, bottleneck visibility, and the immutable audit trail.</div>
+          </div>
+        </div>
+        <div class="tabs" role="tablist"><button class="tabb active" role="tab" id="tab-ov"
+            aria-selected="true">Overview</button><button class="tabb" role="tab" id="tab-au"
+            aria-selected="false">Audit Log</button></div>
+        <div id="rp-ov">
+          <div class="tiles three">
+            <div class="tile">
+              <div class="tl">Average Case Duration</div>
+              <div class="tn">6.4 days</div>
+              <div class="tc">Across completed reviews</div>
+            </div>
+            <div class="tile">
+              <div class="tl">Cases Overdue</div>
+              <div class="tn">2</div>
+              <div class="tc">Beyond configured target</div>
+            </div>
+            <div class="tile">
+              <div class="tl">Simulated Releases (YTD)</div>
+              <div class="tn">0</div>
+              <div class="tc">Demo data only</div>
+            </div>
+          </div>
+          <div class="panel gap">
+            <h2>Cases by Stage</h2>
+            <div id="stage-bars"></div>
+          </div>
+          <div class="panel np gap" style="padding-top:16px">
+            <h2 style="padding:0 16px">Overdue Cases</h2>
+            <table>
+              <thead>
+                <tr>
+                  <th scope="col">Case ID</th>
+                  <th scope="col">Owner</th>
+                  <th scope="col">Next Action</th>
+                  <th scope="col">Days Pending</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>SFDR/2026/00123</td>
+                  <td>S. Iyer, Assistant Director</td>
+                  <td>Resolve validation finding</td>
+                  <td style="color:#b91c1c;font-weight:600">2 days</td>
+                </tr>
+                <tr>
+                  <td>SFDR/2026/00088</td>
+                  <td>Unassigned</td>
+                  <td>Assign reviewer</td>
+                  <td style="color:#b91c1c;font-weight:600">3 days</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="panel np" style="padding-top:16px">
+            <h2 style="padding:0 16px">Pending Actions by Reviewer</h2>
+            <table>
+              <thead>
+                <tr>
+                  <th scope="col">Reviewer</th>
+                  <th scope="col">Pending Cases</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>S. Iyer</td>
+                  <td>1</td>
+                </tr>
+                <tr>
+                  <td>R. Mehta</td>
+                  <td>1</td>
+                </tr>
+                <tr>
+                  <td>Unassigned</td>
+                  <td>1</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <div id="rp-au" style="display:none">
+          <div class="small" style="font-style:italic;margin-bottom:8px">Audit records are append-only and cannot be
+            edited through the application.</div>
+          <div class="panel np">
+            <table>
+              <thead>
+                <tr>
+                  <th scope="col">Timestamp</th>
+                  <th scope="col">User</th>
+                  <th scope="col">Role</th>
+                  <th scope="col">Action</th>
+                  <th scope="col">Case ID</th>
+                  <th scope="col">Reason / Metadata</th>
+                </tr>
+              </thead>
+              <tbody id="audit-body"></tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <footer class="footer">
+    <div class="l">
+      <div>© 2026 All India Council for Technical Education. Prototype for demonstration only.</div>
+      <div><a href="#" onclick="return false;">Privacy Policy</a> · <a href="#" onclick="return false;">Terms of Use</a>
+        · <a href="#" onclick="return false;">Sitemap</a> · <a href="#" onclick="return false;">Contact</a> · <a
+          href="#" onclick="return false;">Accessibility Statement</a></div>
+    </div>
+    <div style="margin-top:4px">Last updated: 25 Oct 2026, 14:32 IST</div>
+  </footer>
+
+  <div class="modalbg" id="modalbg">
+    <div class="modal" role="dialog" aria-modal="true" aria-labelledby="m-title">
+      <div id="m-title" style="font-size:14px;font-weight:600;margin-bottom:6px"></div>
+      <p id="m-body" style="font-size:13px;margin-bottom:10px"></p>
+      <label class="sr-only" for="m-text">Reason</label>
+      <textarea id="m-text" rows="3" required style="width:100%"></textarea>
+      <div id="m-err" style="font-size:12px;color:#b91c1c;display:none;margin-top:4px">A reason is required.</div>
+      <div style="display:flex;justify-content:flex-end;gap:8px;margin-top:14px">
+        <button class="btn sec" id="m-cancel">Cancel</button><button class="btn" id="m-ok"></button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    var currentRole = 'institution';
+    var CASES = {
+      A: {
+        key: 'A', caseId: 'SFDR/2026/00101', fdr: 'AICTE/FDR/2024/0456', inst: 'National Institute of Engineering, Bengaluru', amount: '₹25,00,000', maturity: '15 Apr 2027', submitted: '24 Oct 2026, 09:14', updated: '24 Oct 2026, 09:22', status: 'PASS', reviewer: 'R. Mehta, Deputy Director', file: 'FDR_scan_NIE_2024.pdf', uploaded: '24 Oct 2026, 09:15', size: '1.1 MB',
+        fields: [['FDR Reference', 'SBI/FD/2024/884512', 'SBI/FD/2024/884512', '98%'], ['Bank Name', 'State Bank of India', 'State Bank of India', '97%'], ['Deposit Amount', '₹25,00,000', '₹25,00,000', '96%'], ['Issue Date', '15 Apr 2024', '15 Apr 2024', '96%'], ['Maturity Date', '15 Apr 2027', '15 Apr 2027', '95%']],
+        doc: ['STATE BANK OF INDIA', 'MG Road Branch', '', 'FIXED DEPOSIT RECEIPT', 'Receipt No.      : SBI/FD/2024/884512', 'Depositor        : National Institute of Engineering', 'Amount           : Rs. 25,00,000/-', 'Date of Deposit  : 15 Apr 2024', 'Maturity Date    : 15 Apr 2027', '', 'Authorised Signatory: ______________'],
+        tl: [['24 Oct 2026, 09:14', 'FDR record created', 'K. Sharma (Institution User)'], ['24 Oct 2026, 09:16', 'OCR extraction completed', 'System'], ['24 Oct 2026, 09:16', 'Validation passed', 'System'], ['24 Oct 2026, 09:22', 'Case assigned to R. Mehta, Deputy Director', 'System'], ['24 Oct 2026, 09:22', 'Awaiting reviewer decision', 'R. Mehta (Reviewer)']]
+      },
+      B: {
+        key: 'B', caseId: 'SFDR/2026/00123', fdr: 'AICTE/FDR/2024/0789', inst: 'Sri Venkateswara College of Engineering, Tirupati', amount: '₹10,00,000', maturity: '20 Jun 2027', submitted: '24 Oct 2026, 10:02', updated: '25 Oct 2026, 10:04', status: 'REVIEW REQUIRED', reviewer: 'S. Iyer, Assistant Director', file: 'FDR_scan_SVCE_2024.pdf', uploaded: '24 Oct 2026, 10:03', size: '1.2 MB',
+        fields: [['FDR Reference', 'CNR/FD/2024/221045', 'CNR/FD/2024/221045', '98%'], ['Bank Name', 'Canara Bank', 'Canara Bank', '97%'], ['Deposit Amount', '₹10,00,000', '₹12,00,000', '94%'], ['Issue Date', '20 Jun 2024', '20 Jun 2024', '96%'], ['Maturity Date', '20 Jun 2027', '20 Jun 2027', '95%']],
+        doc: ['CANARA BANK', 'Tirupati Main Branch', '', 'FIXED DEPOSIT RECEIPT', 'Receipt No.      : CNR/FD/2024/221045', 'Depositor        : Sri Venkateswara College of Engineering', 'Amount           : Rs. 12,00,000/-', 'Date of Deposit  : 20 Jun 2024', 'Maturity Date    : 20 Jun 2027', '', 'Authorised Signatory: ______________'],
+        tl: [['24 Oct 2026, 10:02', 'FDR record created', 'K. Sharma (Institution User)'], ['24 Oct 2026, 10:03', 'Document uploaded: FDR_scan_SVCE_2024.pdf', 'K. Sharma (Institution User)'], ['24 Oct 2026, 10:04', 'OCR extraction completed', 'System'], ['24 Oct 2026, 10:04', 'Validation finding: Amount mismatch (OCR ₹12,00,000 vs submitted ₹10,00,000)', 'System'], ['24 Oct 2026, 10:06', 'Case assigned to S. Iyer, Assistant Director', 'System'], ['25 Oct 2026, 10:04', 'Awaiting reviewer resolution', 'S. Iyer (Reviewer)']]
+      },
+      C: {
+        key: 'C', caseId: 'SFDR/2026/00088', fdr: 'AICTE/FDR/2023/1122', inst: 'Government Engineering College, Thrissur', amount: '₹40,00,000', maturity: '10 Dec 2026', submitted: '22 Oct 2026, 15:10', updated: '24 Oct 2026, 16:41', status: 'INCOMPLETE', reviewer: 'Unassigned', file: 'FDR_scan_GEC_2023.pdf', uploaded: '22 Oct 2026, 15:12', size: '1.0 MB',
+        fields: [['FDR Reference', 'BOB/FD/2023/556781', 'BOB/FD/2023/556781', '97%'], ['Bank Name', 'Bank of Baroda', 'Bank of Baroda', '97%'], ['Deposit Amount', '₹40,00,000', '₹40,00,000', '95%'], ['Issue Date', '10 Dec 2023', '10 Dec 2023', '96%'], ['Maturity Date', '10 Dec 2026', '10 Dec 2026', '95%']],
+        doc: ['BANK OF BARODA', 'Thrissur Branch', '', 'FIXED DEPOSIT RECEIPT', 'Receipt No.      : BOB/FD/2023/556781', 'Depositor        : Government Engineering College', 'Amount           : Rs. 40,00,000/-', 'Date of Deposit  : 10 Dec 2023', 'Maturity Date    : 10 Dec 2026', '', 'Authorised Signatory: ______________'],
+        tl: [['22 Oct 2026, 15:10', 'FDR record created', 'Institution User'], ['22 Oct 2026, 15:12', 'Document uploaded: FDR_scan_GEC_2023.pdf', 'Institution User'], ['24 Oct 2026, 16:41', 'Reminder generated: maturity approaching, 46 days remaining', 'System'], ['24 Oct 2026, 16:41', 'Awaiting reviewer assignment', 'System']]
+      }
+    };
+    var BYCASEID = {}; Object.keys(CASES).forEach(function (k) { BYCASEID[CASES[k].caseId] = k; });
+    var resolved = false, resolveReason = '', curCase = 'B', qCase = 'B';
+    var AUDIT = [
+      ['24 Oct 2026, 09:14', 'K. Sharma', 'Institution', 'FDR record created', 'SFDR/2026/00101', '—'],
+      ['24 Oct 2026, 09:16', 'System', 'System', 'OCR extraction completed', 'SFDR/2026/00101', '5 fields extracted'],
+      ['24 Oct 2026, 09:16', 'System', 'System', 'Validation passed', 'SFDR/2026/00101', 'No configured issues detected'],
+      ['24 Oct 2026, 09:22', 'System', 'System', 'Case assigned', 'SFDR/2026/00101', 'Assigned to R. Mehta, Deputy Director'],
+      ['24 Oct 2026, 10:02', 'K. Sharma', 'Institution', 'FDR record created', 'SFDR/2026/00123', '—'],
+      ['24 Oct 2026, 10:03', 'K. Sharma', 'Institution', 'Document uploaded', 'SFDR/2026/00123', 'FDR_scan_SVCE_2024.pdf'],
+      ['24 Oct 2026, 10:04', 'System', 'System', 'OCR extraction completed', 'SFDR/2026/00123', '5 fields extracted'],
+      ['24 Oct 2026, 10:04', 'System', 'System', 'Validation finding created', 'SFDR/2026/00123', 'Amount mismatch: OCR ₹12,00,000 vs submitted ₹10,00,000'],
+      ['24 Oct 2026, 10:06', 'System', 'System', 'Case assigned', 'SFDR/2026/00123', 'Assigned to S. Iyer, Assistant Director'],
+      ['24 Oct 2026, 16:41', 'System', 'System', 'Reminder generated', 'SFDR/2026/00088', 'Maturity approaching: 46 days remaining'],
+      ['25 Oct 2026, 09:02', 'System', 'System', 'Overdue action flagged', 'SFDR/2026/00123', '2 days pending beyond configured target']
+    ];
+    var STAGES = [['Document Review', 1], ['Decision Pending', 1], ['Correction Required', 1], ['Clearance Pending', 0], ['Approved (Simulated)', 0]];
+    var BCLS = { 'PASS': 'b-green', 'REVIEW REQUIRED': 'b-red', 'INCOMPLETE': 'b-amber' };
+    function esc(s) { return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;'); }
+    function badge(s) { return '<span class="badge ' + BCLS[s] + '">' + s + '</span>'; }
+    function $(id) { return document.getElementById(id); }
+    function inr(n) { var s = String(Math.round(n)); if (s.length <= 3) return '₹' + s; var l = s.slice(-3), r = s.slice(0, -3); r = r.replace(/\B(?=(\d{2})+(?!\d))/g, ','); return '₹' + r + ',' + l; }
+    function kv(k, v) { return '<div class="kv"><span class="k">' + k + '</span>' + v + '</div>'; }
+
+    /* ---------- navigation ---------- */
+    var SCREENS = ['dashboard', 'registry', 'register', 'docintel', 'queue', 'reports'];
+    function showScreen(id) {
+      var target = id;
+      if (id === 'casedetail') { target = 'queue'; openCase(CASES[curCase].caseId); }
+      SCREENS.forEach(function (s) { $('s-' + s).classList.toggle('on', s === target); });
+      document.querySelectorAll('.navb').forEach(function (b) { b.classList.toggle('active', b.getAttribute('data-nav') === target); });
+      window.scrollTo(0, 0);
+    }
+    document.querySelectorAll('.navb').forEach(function (b) { b.addEventListener('click', function () { var n = b.getAttribute('data-nav'); if (n === 'queue') openQueue(); showScreen(n); }); });
+    function flash(msg) { var f = $('flash'); f.textContent = msg; f.classList.add('show'); clearTimeout(flash.t); flash.t = setTimeout(function () { f.classList.remove('show'); }, 3000); }
+
+    /* ---------- dropdowns / role ---------- */
+    function closeDD() { $('notifdd').classList.remove('open'); $('roledd').classList.remove('open'); $('bellbtn').setAttribute('aria-expanded', 'false'); $('userbtn').setAttribute('aria-expanded', 'false'); }
+    $('bellbtn').addEventListener('click', function (e) { e.stopPropagation(); var o = !$('notifdd').classList.contains('open'); closeDD(); if (o) { $('notifdd').classList.add('open'); this.setAttribute('aria-expanded', 'true'); } });
+    $('userbtn').addEventListener('click', function (e) { e.stopPropagation(); var o = !$('roledd').classList.contains('open'); closeDD(); if (o) { $('roledd').classList.add('open'); this.setAttribute('aria-expanded', 'true'); } });
+    document.addEventListener('click', function (e) { if (!e.target.closest('.dd')) closeDD(); });
+    document.addEventListener('keydown', function (e) { if (e.key === 'Escape') { closeDD(); closeModal(); } });
+    $('markread').addEventListener('click', function () { document.querySelectorAll('.notif.unread').forEach(function (n) { n.classList.remove('unread'); }); });
+    document.querySelectorAll('[data-role]').forEach(function (b) { b.addEventListener('click', function () { setRole(b.getAttribute('data-role')); closeDD(); }); });
+    var RN = { institution: ['K. Sharma', 'Institution User'], reviewer: ['S. Iyer', 'Reviewer'], administrator: ['A. Verma', 'Administrator'] };
+    var ACTIONS = ['start', 'complete', 'correction', 'hold', 'observation', 'decision'];
+    function setDisabled(el, dis) {
+      if (!el) return;
+      if (dis) { el.setAttribute('disabled', 'disabled'); el.classList.add('opacity-50', 'cursor-not-allowed'); el.setAttribute('title', 'Insufficient permissions — reviewer role required'); }
+      else { el.removeAttribute('disabled'); el.classList.remove('opacity-50', 'cursor-not-allowed'); el.removeAttribute('title'); }
+    }
+    function applyRole() {
+      var dis = currentRole === 'institution';
+      ACTIONS.forEach(function (a) { setDisabled($('action-' + a), dis); });
+      setDisabled($('resolve-btn'), dis);
+      var rc = $('reqcorr-btn'); if (rc) setDisabled(rc, dis);
+    }
+    function setRole(role) { currentRole = role; $('uname').textContent = RN[role][0]; $('urole').textContent = RN[role][1]; applyRole(); }
+
+    /* ---------- modal ---------- */
+    var modalCb = null;
+    function openModal(title, body, label, cb) {
+      $('m-title').textContent = title; $('m-body').textContent = body; $('m-ok').textContent = label; $('m-text').value = ''; $('m-err').style.display = 'none';
+      modalCb = cb; $('modalbg').classList.add('open'); $('m-text').focus();
+    }
+    function closeModal() { $('modalbg').classList.remove('open'); modalCb = null; }
+    $('m-cancel').addEventListener('click', closeModal);
+    $('m-ok').addEventListener('click', function () { var v = $('m-text').value.trim(); if (!v) { $('m-err').style.display = 'block'; $('m-text').focus(); return; } var cb = modalCb; closeModal(); if (cb) cb(v); });
+
+    /* ---------- registry ---------- */
+    var REG = [['A', 'R. Mehta, Deputy Director', '24 Oct 2026, 11:20', 'AICTE/FDR/2024/0456', 'National Institute of Engineering, Bengaluru', '15 Apr 2027'], ['B', 'S. Iyer, Assistant Director', '25 Oct 2026, 10:04', 'AICTE/FDR/2024/0789', 'Sri Venkateswara College of Engineering, Tirupati', '20 Jun 2027'], ['C', 'Unassigned', '24 Oct 2026, 16:41', 'AICTE/FDR/2023/1122', 'Government Engineering College, Thrissur', '10 Dec 2026']];
+    var REGSTATUS = { A: 'PASS', B: 'REVIEW REQUIRED', C: 'INCOMPLETE' };
+    function renderRegistry() {
+      var q = $('f-q').value.toLowerCase(), inst = $('f-inst').value, st = $('f-status').value, h = '', n = 0;
+      REG.forEach(function (r) {
+        var c = CASES[r[0]];
+        if (inst && inst !== r[0]) return;
+        if (st && st !== REGSTATUS[r[0]]) return;
+        if (q && (r[3] + ' ' + r[4] + ' ' + c.caseId).toLowerCase().indexOf(q) < 0) return;
+        n++;
+        h += '<tr><td' + (r[0] === 'B' ? ' style="border-left:4px solid #b91c1c"' : '') + '>' + r[3] + '</td><td>' + r[4] + '</td><td>' + c.amount + '</td><td>' + r[5] + '</td><td>' + badge(REGSTATUS[r[0]]) + '</td><td>' + r[1] + '</td><td>' + r[2] + '</td><td><a href="#" onclick="loadCase(\'' + r[0] + '\');showScreen(\'docintel\');return false;">View Details</a></td></tr>';
+      });
+      $('reg-body').innerHTML = h || '<tr><td colspan="8" style="text-align:center;color:#6b7280">No records match the selected filters.</td></tr>';
+      $('reg-count').textContent = n ? 'Showing 1–' + n + ' of 3 records' : 'Showing 0 of 3 records';
+    }
+    $('f-apply').addEventListener('click', renderRegistry);
+    $('f-reset').addEventListener('click', function () { $('f-q').value = ''; $('f-inst').value = ''; $('f-status').value = ''; $('f-mat').selectedIndex = 0; renderRegistry(); });
+
+    /* ---------- register ---------- */
+    $('d4').addEventListener('input', function () { var v = parseInt(this.value.replace(/[^0-9]/g, ''), 10); $('amt-help').innerHTML = 'Enter amount in rupees. Do not include commas.' + (isNaN(v) ? '' : '<br>Submitted amount: ' + inr(v)); });
+    $('ocr-btn').addEventListener('click', function () {
+      var b = this; b.disabled = true; b.textContent = 'Extracting…';
+      setTimeout(function () { $('ocr-out').style.display = 'block'; b.textContent = 'Uploaded'; b.style.color = '#6b7280'; $('up-st').textContent = 'Uploaded'; $('up-st').style.color = '#15803d'; $('up-fn').textContent = 'FDR_scan_SVCE_2024.pdf'; }, 1000);
+    });
+    $('submit-btn').addEventListener('click', function () { flash('FDR record created — Case SFDR/2026/00123. Sent to reviewer queue.'); window.scrollTo(0, 0); });
+
+    /* ---------- document verification ---------- */
+    function stripHtml(c) {
+      var st = (c.key === 'B' && resolved) ? 'PASS' : c.status;
+      return '<div class="panel gap"><div style="display:grid;grid-template-columns:repeat(3,1fr);gap:16px">'
+        + '<div>' + kv('Case ID', c.caseId) + kv('FDR ID', c.fdr) + kv('Institution', c.inst) + '</div>'
+        + '<div>' + kv('Submitted Amount', c.amount) + kv('Reviewer', c.reviewer) + kv('Date Submitted', c.submitted) + '</div>'
+        + '<div>' + kv('Maturity Date', c.maturity) + kv('Verification Status', badge(st)) + kv('Last Updated', c.updated) + '</div></div>'
+        + '<div style="text-align:right"><span class="badge b-grey" title="Bank confirmation not available. Manual verification required.">Not independently verified</span></div></div>';
+    }
+    function findingsHtml(c) {
+      var h = '<div class="panel"><div style="display:flex;justify-content:space-between;align-items:flex-start"><h2>Validation Findings</h2>';
+      if (c.key === 'A') {
+        h += badge('PASS') + '</div><div class="finding f-green"><div style="font-size:13px">No configured validation issues detected.</div></div><div class="small">This indicates only that configured checks passed. It does not verify the FDR\'s authenticity.</div>';
+      } else if (c.key === 'B') {
+        if (resolved) {
+          h += badge('PASS') + '</div><div class="finding f-green"><div><div style="font-size:13px;font-weight:600">Finding resolved — Amount verified at ₹12,00,000 per reviewer note.</div><div class="small">Resolved 25 Oct 2026, 10:45 · ' + esc(resolveReason) + '</div></div></div>';
+        } else {
+          h += badge('REVIEW REQUIRED') + '</div><div class="finding f-red"><div><div style="font-size:13px;font-weight:600">Amount mismatch — Deposit Amount</div><div style="font-size:13px">OCR extracted ₹12,00,000 from the uploaded FDR. The submitted amount is ₹10,00,000. The case cannot advance until a reviewer inspects the evidence and records a resolution.</div><div class="small">Detected 25 Oct 2026, 10:04 · Rule: amount_consistency_check</div></div><button class="btn" id="resolve-btn">Resolve Finding</button></div>';
+        }
+      } else {
+        h += badge('INCOMPLETE') + '</div><div class="finding f-amber"><div><div style="font-size:13px;font-weight:600">Missing prescribed document — Affidavit</div><div style="font-size:13px">The affidavit is listed as a required document for this case type and has not been uploaded. The case cannot advance to clearance pending stage.</div><div class="small">Detected 24 Oct 2026, 16:41 · Rule: required_documents_check</div></div><button class="btn sec" id="reqcorr-btn">Request Correction</button></div>';
+      }
+      return h + '</div>';
+    }
+    function caseBlock(c) {
+      var rows = '';
+      c.fields.forEach(function (f) {
+        var mm = f[1] !== f[2];
+        rows += '<tr' + (mm ? ' style="background:#fef2f2"' : '') + '><td>' + f[0] + '</td><td' + (mm ? ' style="color:#b91c1c;font-weight:600"' : '') + '>' + f[1] + '</td><td' + (mm ? ' style="color:#b91c1c;font-weight:600"' : '') + '>' + f[2] + '</td><td>' + f[3] + '</td><td>' + (mm ? '<span class="badge b-red">MISMATCH</span>' : '') + '</td></tr>';
+      });
+      return stripHtml(c)
+        + '<div class="row2" style="grid-template-columns:55fr 45fr">'
+        + '<div class="panel"><h2>Uploaded Document</h2><div class="doc">' + esc(c.doc.join('\n')) + '<div class="wm">SIMULATED SCAN</div></div><div class="small" style="margin-top:6px">Filename: ' + c.file + ' · Uploaded ' + c.uploaded + ' · ' + c.size + '</div></div>'
+        + '<div class="panel"><h2>Extracted Fields</h2><table><thead><tr><th scope="col">Field</th><th scope="col">Submitted Value</th><th scope="col">Extracted Value</th><th scope="col">Confidence</th><th scope="col"><span class="sr-only">Flag</span></th></tr></thead><tbody>' + rows + '</tbody></table><div style="margin-top:8px"><a href="#" style="font-size:12px" onclick="return false;">Edit extracted values</a></div></div></div>'
+        + findingsHtml(c);
+    }
+    function renderDocIntel() {
+      var h = '';
+      Object.keys(CASES).forEach(function (k) { h += '<div data-case="' + k + '" style="display:' + (k === curCase ? 'block' : 'none') + '">' + caseBlock(CASES[k]) + '</div>'; });
+      $('di-cases').innerHTML = h;
+      var rb = $('resolve-btn'); if (rb) rb.addEventListener('click', function () {
+        openModal('Resolve Validation Finding', 'Provide a reason for resolution. This will be recorded in the audit trail.', 'Confirm Resolution', function (reason) { doResolve(reason); });
+      });
+      var rc = $('reqcorr-btn'); if (rc) rc.addEventListener('click', function () {
+        openModal('Request Correction', 'Provide the reason for requesting correction.', 'Submit Request', function () { flash('Correction request recorded (demo only).'); });
+      });
+      applyRole();
+    }
+    function loadCase(k) { curCase = k; $('case-sel').value = k; Object.keys(CASES).forEach(function (c) { var d = document.querySelector('#di-cases [data-case="' + c + '"]'); if (d) d.style.display = (c === k ? 'block' : 'none'); }); }
+    $('case-sel').addEventListener('change', function () { loadCase(this.value); });
+    function doResolve(reason) {
+      resolved = true; resolveReason = reason;
+      CASES.B.tl.push(['25 Oct 2026, 10:45', 'Finding resolved: amount corrected to ₹12,00,000 per reviewer note', 'S. Iyer (Reviewer)']);
+      AUDIT.push(['25 Oct 2026, 10:45', 'S. Iyer', 'Reviewer', 'Finding resolved', 'SFDR/2026/00123', reason]);
+      $('m-disc').textContent = '0';
+      renderDocIntel(); renderAudit(); if (qCase === 'B') renderCaseDetail('B');
+    }
+
+    /* ---------- case detail ---------- */
+    function renderCaseDetail(k) {
+      var c = CASES[k], tl = '';
+      c.tl.forEach(function (e, i) {
+        var last = i === c.tl.length - 1;
+        tl += '<div class="tevent"><div class="ts">' + e[0] + '</div><div class="rail"><div class="pt' + (last ? ' last' : '') + '"></div>' + (last ? '' : '<div class="ln"></div>') + '</div><div class="bd">' + esc(e[1]) + '<div class="small">' + esc(e[2]) + '</div></div></div>';
+      });
+      $('q-b').innerHTML = '<div class="crumb">Home &gt; <a href="#" style="color:#6b7280;text-decoration:none" onclick="openQueue();return false;">Reviewer Queue</a> &gt; <span class="cur">' + c.caseId + '</span></div>'
+        + '<div class="titlerow"><div><h1>Case Detail</h1></div></div>'
+        + '<div class="panel gap"><div style="display:grid;grid-template-columns:repeat(3,1fr);gap:16px">'
+        + '<div>' + kv('Case ID', c.caseId) + kv('FDR ID', c.fdr) + kv('Institution', c.inst) + '</div>'
+        + '<div>' + kv('Submitted Amount', c.amount) + kv('Maturity Date', c.maturity) + kv('Date Submitted', c.submitted) + '</div>'
+        + '<div>' + kv('Current Status', badge(c.status)) + kv('Assigned Reviewer', c.reviewer) + kv('Last Updated', c.updated) + '</div></div>'
+        + '<div style="text-align:right"><span class="badge b-grey" title="Bank confirmation not available. Manual verification required.">Not independently verified</span></div></div>'
+        + '<div class="row2" style="grid-template-columns:55fr 45fr"><div class="panel"><h2>Case Timeline</h2>' + tl + '</div>'
+        + '<div class="panel"><h2>Reviewer Actions</h2>'
+        + '<button class="btn sec actbtn" id="action-start">Start Review</button>'
+        + '<button class="btn sec actbtn" id="action-complete">Mark Review Complete</button>'
+        + '<button class="btn sec actbtn" id="action-correction">Request Correction</button>'
+        + '<button class="btn sec actbtn" id="action-hold">Place on Hold</button>'
+        + '<button class="btn sec actbtn" id="action-observation">Record Observation</button>'
+        + '<button class="btn actbtn" id="action-decision">Record Decision</button>'
+        + '<div class="small">AI flags issues only. Final decision rests with the authorized officer.</div></div></div>'
+        + '<a href="#" onclick="openQueue();return false;">← Back to Queue</a>';
+      $('action-start').addEventListener('click', function () { flash('Review started (demo only, not stored).'); });
+      $('action-complete').addEventListener('click', function () { flash('Review marked complete (demo only, not stored).'); });
+      $('action-decision').addEventListener('click', function () { flash('Decision recording is not available in this prototype.'); });
+      $('action-correction').addEventListener('click', function () { openModal('Request Correction', 'Provide the reason for requesting correction.', 'Submit Request', function () { flash('Correction request recorded (demo only).'); }); });
+      $('action-hold').addEventListener('click', function () { openModal('Place on Hold', 'Provide the reason for placing this case on hold.', 'Confirm Hold', function () { flash('Case placed on hold (demo only).'); }); });
+      $('action-observation').addEventListener('click', function () { openModal('Record Observation', 'Enter the observation text.', 'Save Observation', function () { flash('Observation recorded (demo only).'); }); });
+      applyRole();
+    }
+    function openCase(id) { var k = BYCASEID[id] || 'B'; qCase = k; curCase = k; $('case-sel').value = k; loadCase(k); renderCaseDetail(k); $('q-a').style.display = 'none'; $('q-b').style.display = 'block'; showScreen('queue'); }
+    function openQueue() { $('q-a').style.display = 'block'; $('q-b').style.display = 'none'; window.scrollTo(0, 0); }
+
+    /* ---------- reports ---------- */
+    function renderAudit() {
+      var h = ''; AUDIT.forEach(function (r) { h += '<tr>' + r.map(function (x) { return '<td>' + esc(x) + '</td>'; }).join('') + '</tr>'; });
+      $('audit-body').innerHTML = h;
+    }
+    function renderStages() {
+      var max = 1, h = ''; STAGES.forEach(function (s) { max = Math.max(max, s[1]); });
+      STAGES.forEach(function (s) { h += '<div class="bar-row"><div class="lab" style="width:150px">' + s[0] + '</div><div class="track">' + (s[1] ? '<div class="bar" style="width:' + (s[1] / max * 100) + '%;background:#1e3a5f"></div>' : '') + '</div><div style="width:20px;text-align:right">' + s[1] + '</div></div>'; });
+      $('stage-bars').innerHTML = h;
+    }
+    function setTab(t) {
+      var ov = t === 'ov'; $('rp-ov').style.display = ov ? 'block' : 'none'; $('rp-au').style.display = ov ? 'none' : 'block';
+      $('tab-ov').classList.toggle('active', ov); $('tab-au').classList.toggle('active', !ov);
+      $('tab-ov').setAttribute('aria-selected', ov); $('tab-au').setAttribute('aria-selected', !ov);
+    }
+    $('tab-ov').addEventListener('click', function () { setTab('ov'); });
+    $('tab-au').addEventListener('click', function () { setTab('au'); });
+
+    /* ---------- init ---------- */
+    renderRegistry(); renderDocIntel(); renderAudit(); renderStages(); renderCaseDetail('B'); setRole('reviewer');
+  </script>
+</body>
+
+</html>
